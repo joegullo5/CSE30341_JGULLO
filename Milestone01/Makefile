@@ -1,8 +1,17 @@
-CC=gcc
-CFLAGS=-Wall
+# set gcc as the compiler
+CC = gcc
 
-bytecheck: bytecheck.c
-    $(CC) $(CFLAGS) -o bytecheck bytecheck.c
+#adds -g and -Wall for debugging and sets standard to gnu99
+CFLAGS  = -g -Wall -std=gnu99
+
+# variable to store name of c file and executable
+TARGET = bytecheck
+
+
+all: $(TARGET)
+
+$(TARGET): $(TARGET).c
+	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).c
 
 clean:
-    rm -f bytecheck
+	$(RM) $(TARGET)
