@@ -74,7 +74,6 @@ int main(int argc, char *argv[]) {
         //printf("%ld\n", bytes_read);
         // Iterate through the bufer and count how many times the input byte value occurs 
         for (int i = 0; i < bytes_read; i++) {
-
             //Checks to see if the value being checked in the bufferbuffer 
             if (buff[i] == input_byte) {
                 //printf("%d\n", buff[i]);
