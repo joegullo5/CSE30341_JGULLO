@@ -155,9 +155,9 @@ int main(int argc, char *argv[]) {
   if(reverse_bytes==1)
   {
     for (long i = fileSize - 1; i >= 0; i--) {
-      fseek(ifp, i, SEEK_SET); // Sets the file pointer at the correct location
+      fseek(ifp, i, SEEK_SET); // Sets the file pointer at the correct locationg
       byte = fgetc(ifp);
-      if(flip_bits==1)// If the flip bit flag is also set, this flips the bits before 
+      if(flip_bits==1)// If the flip bit flag is also set, this flips the bits before G
       {
         byte ^= 0xFF;
       }
