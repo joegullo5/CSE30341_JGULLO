@@ -16,6 +16,8 @@ void start_command(char* myargs[]);
 void wait_command();
 void waitfor_command(int child_pid);
 void run_command(char* myargs[]);
+void kill_command(int child_pid);
+
 
 int main() {
     char input[MAX_INPUT_LEN];
@@ -59,12 +61,20 @@ int main() {
             waitfor_command(child_pid);
         } else if (strcmp(words[0], "run") == 0) {
             run_command(words);
-        }
+        } else if (strcmp(words[0], "kill") == 0) {
+            if (words[1] == NULL) {
+                printf("ndshell: No process ID provided.\n");
+                continue;
+            }
+            child_pid = atoi(words[1]);
+            kill_command(child_pid);
+        } else if (strcmp(words[0], "quit") == 0) {
+            quit_command();
+        } 
     }
 
     return 0;
 }
-
 
 
 
@@ -156,3 +166,33 @@ void run_command(char* myargs[]) {
         waitfor_command(pid);
     }
 }
+
+
+void kill_command(int child_pid) {
+
+    // send SIGKILL signal to child process
+    int kill_result = kill(child_pid, SIGKILL);
+    if (kill_result == -1) {
+        perror("ndshell: kill failed");
+        return;
+    }
+
+    // wait for child process to exit
+    int status;
+    pid_t result = waitpid(child_pid, &status, 0);
+
+    if (result == -1) {
+        perror("ndshell: waitpid failed");
+        return;
+    }
+
+    // check exit status
+    if (WIFEXITED(status)) {
+        printf("ndshell: process %d exited with status %d\n", child_pid, WEXITSTATUS(status));
+    } else if (WIFSIGNALED(status)) {
+        printf("ndshell: process %d exited abnormally with signal %d: %s\n", child_pid, WTERMSIG(status), strsignal(WTERMSIG(status)));
+    }
+}
+
+
+
