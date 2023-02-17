@@ -15,7 +15,7 @@ void exit_shell();
 void start_command(char* myargs[]);
 void wait_command();
 void waitfor_command(int child_pid);
-void run_program(char* myargs[]);
+void run_command(char* myargs[]);
 
 int main() {
     char input[MAX_INPUT_LEN];
@@ -57,6 +57,8 @@ int main() {
             }
             child_pid = atoi(words[1]);
             waitfor_command(child_pid);
+        } else if (strcmp(words[0], "run") == 0) {
+            run_command(words);
         }
     }
 
@@ -139,5 +141,18 @@ void waitfor_command(int child_pid) {
 
 // Start the program and wait for it to complete (start+waitfor)
 void run_command(char* myargs[]) {
+    pid_t pid = fork();
 
+    if (pid < 0) {
+        fprintf(stderr, "Fork failed\n");
+        return;
+    } else if (pid == 0) {
+        if (execvp(myargs[1], &myargs[1]) < 0) {
+            fprintf(stderr, "Execution failed\n");
+        }
+        exit(0);
+    } else {
+        printf("ndshell: process %d started\n", pid);
+        waitfor_command(pid);
+    }
 }
