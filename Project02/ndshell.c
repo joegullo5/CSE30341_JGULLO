@@ -61,14 +61,13 @@ int main() {
         printf("ndshell> ");
         fflush(stdout);
         fgets(input, MAX_INPUT_LEN, stdin);
-
         // remove newline character
         input[strcspn(input, "\n")] = 0;
-
         // tokenize the input string
         int i = 0;
         words[i] = strtok(input, " ");
 
+        //store arguments in word array
         while (words[i] != NULL) {
             i++;
             words[i] = strtok(NULL, " ");
@@ -77,7 +76,8 @@ int main() {
         if (words[0] == NULL) {
             continue;
         }
-
+        
+        // check arguments
         if (strcmp(words[0], "exit") == 0) {
             exit_shell();
         } else if (strcmp(words[0], "start") == 0) {
@@ -85,6 +85,7 @@ int main() {
         } else if (strcmp(words[0], "wait") == 0) {
             wait_command();
         } else if (strcmp(words[0], "waitfor") == 0) {
+            //make sure process id is given
             if (words[1] == NULL) {
                 printf("ndshell: No process ID provided.\n");
                 continue;
@@ -95,6 +96,7 @@ int main() {
             run_command(words);
         } else if (strcmp(words[0], "kill") == 0) {
             if (words[1] == NULL) {
+                //make sure process id is given
                 printf("ndshell: No process ID provided.\n");
                 continue;
             }
@@ -106,6 +108,8 @@ int main() {
             ps(head);
         } else if (strcmp(words[0], "quit") == 0) {
             quit_command();
+        } else{
+            printf("ndshell: unknown command: %s\n", words[0]);
         }
     }
 }
@@ -230,7 +234,7 @@ void kill_command(int child_pid) {
 
 
 
-
+//adds node to doubly linked list when process is created
 void addNode(int pid, char name[]) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     num_processes++;
@@ -249,6 +253,7 @@ void addNode(int pid, char name[]) {
     tail = newNode;
 }
 
+//removes node from doubly linked list when process is ended
 void removeNode(int pid) {
     Node* curr = head;
     while (curr != NULL && curr->pid != pid) {
@@ -279,6 +284,8 @@ void removeNode(int pid) {
     free(curr);
 }
 
+
+//recursive function that iterates through list
 void ps(Node* node) {
 
     if (node != NULL)
@@ -288,6 +295,7 @@ void ps(Node* node) {
         if (result == 0) {
             // child process still running
             display(node);
+            //iterates through, calling iteself until Null node is reached.
             if (node->next != NULL)
             {
                 ps(node->next);
@@ -295,6 +303,7 @@ void ps(Node* node) {
         } else if (result == -1) {
             return;
         } else {
+            //removes node if process is over
             removeNode(node->pid);  // remove the process from the linked list
             ps(head); //call ps on head instead
         }
