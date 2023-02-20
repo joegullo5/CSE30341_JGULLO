@@ -41,7 +41,6 @@ int main() {
     }
 
     // prompt the user for input
-
     printf("Execute? ");
 
     // read the user's input into the input array

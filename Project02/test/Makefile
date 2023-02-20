@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS  = -g -Wall -std=gnu99
 
 # variable to store name of c file and executable
-TARGET = ndshell
+TARGET = testshell
 
 
 all: $(TARGET)
